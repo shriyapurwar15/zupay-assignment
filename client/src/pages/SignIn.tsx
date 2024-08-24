@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios, { AxiosError } from "axios"
+import axios, { AxiosError } from "axios";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthTokenStore } from "@/store";
 
 const formSchema = z.object({
@@ -35,8 +35,9 @@ const formSchema = z.object({
 });
 
 export default function SignIn() {
-  const setToken = useAuthTokenStore((state)=>state.setToken);
+  const setToken = useAuthTokenStore((state) => state.setToken);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,40 +45,42 @@ export default function SignIn() {
       password: "",
     },
   });
-  
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     try {
-      const {data} = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/user/login`,values)       
-      if(data){
-        localStorage.setItem("token",data.token);
+      setLoading(true);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/user/login`,
+        values
+      );
+      if (data) {
+        localStorage.setItem("token", data.token);
         setToken(data.token);
         toast.success("signed in successFully");
-        navigate('/')
-        }
+        navigate("/");
       }
-     catch (error) {
+    } catch (error) {
       if (error instanceof AxiosError && error.response) {
         toast.error(error.response.data);
       } else {
         toast.error("Unable to create that post");
       }
-      return;
-    }
-
-  };
-  const checkToken = async ()=>{
-    let token = localStorage.getItem("token");    
-    if(token){
-      // console.log("hello")
-      navigate('/')
+    } finally {
+      setLoading(false);
     }
   }
+  const checkToken = async () => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      // console.log("hello")
+      navigate("/");
+    }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     checkToken();
-  },[])
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full h-screen align-middle justify-center">
@@ -120,10 +123,14 @@ export default function SignIn() {
                 )}
               />
               <div className="flex flex-row justify-between items-center">
-                <Button type="submit">Submit</Button>
+                <Button disabled={loading} type="submit">
+                  Submit
+                </Button>
                 <span className="text-sm">
                   not have an accout? click here to &nbsp;
-                  <Link className="underline font-semibold" to={"/sign-up"}>Sign Up</Link>
+                  <Link className="underline font-semibold" to={"/sign-up"}>
+                    Sign Up
+                  </Link>
                 </span>
               </div>
             </form>

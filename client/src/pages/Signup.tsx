@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios, { AxiosError } from "axios"
+import axios, { AxiosError } from "axios";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormControl,
@@ -22,12 +22,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthTokenStore } from "@/store";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message : "name must be at least 2 characters"
+    message: "name must be at least 2 characters",
   }),
   email: z.string().min(2, {
     message: "email must be at least 2 characters.",
@@ -39,6 +39,7 @@ const formSchema = z.object({
 
 export default function Signup() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,40 +47,42 @@ export default function Signup() {
       password: "",
     },
   });
-  
-  const setToken = useAuthTokenStore((state)=>state.setToken);
+
+  const setToken = useAuthTokenStore((state) => state.setToken);
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    
     try {
-      const {data} = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/user/create`,values)       
-      if(data){
-        localStorage.setItem("token",data.token);
+      setLoading(true);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/user/create`,
+        values
+      );
+      if (data) {
+        localStorage.setItem("token", data.token);
         setToken(data.token);
         toast.success("Account created successFully");
-        navigate('/')
-        }
+        navigate("/");
       }
-     catch (error) {
+    } catch (error) {
       if (error instanceof AxiosError && error.response) {
         toast.error(error.response.data);
       } else {
         toast.error("Unable to create that post");
       }
-      return;
-    }
-
-  };
-  const checkToken = async ()=>{
-    let token = localStorage.getItem("token");    
-    if(token){
-      // console.log("hello")
-      navigate('/')
+    } finally {
+      setLoading(false);
     }
   }
+  const checkToken = async () => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      // console.log("hello")
+      navigate("/");
+    }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     checkToken();
-  },[])
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full h-screen align-middle justify-center">
@@ -87,7 +90,10 @@ export default function Signup() {
         <Card className="md:w-1/2 w-full">
           <CardHeader>
             <CardTitle>Create Account</CardTitle>
-            <CardDescription>Create a new account and have the greatest experience of exploring !</CardDescription>
+            <CardDescription>
+              Create a new account and have the greatest experience of exploring
+              !
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -98,11 +104,7 @@ export default function Signup() {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="John Doe"
-                        type="text"
-                        {...field}
-                      />
+                      <Input placeholder="John Doe" type="text" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -139,10 +141,14 @@ export default function Signup() {
                 )}
               />
               <div className="flex flex-row justify-between items-center">
-                <Button type="submit">Submit</Button>
+                <Button disabled={loading} type="submit">
+                  Submit
+                </Button>
                 <span className="text-sm">
                   already have an accout? click here to &nbsp;
-                  <Link className="underline font-semibold" to={"/sign-in"}>Sign In</Link>
+                  <Link className="underline font-semibold" to={"/sign-in"}>
+                    Sign In
+                  </Link>
                 </span>
               </div>
             </form>
