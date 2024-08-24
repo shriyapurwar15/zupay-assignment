@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import {  useNavigate, useParams } from "react-router-dom";
+import {  useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { CircleX, Edit2Icon } from "lucide-react";
@@ -32,6 +32,13 @@ const formSchema = z.object({
 
 const BlogPostPage = () => {
   const token = useAuthTokenStore((state) => state.token);
+  const handleClick = ()=>{
+    if(!token){
+      toast.error("Please login to edit this post");
+      setEditing(false);
+    }
+    else setEditing(true);
+  }
   const navigate = useNavigate();
   const [loading,setLoading] = useState(false);
   const { blogId } = useParams();
@@ -104,22 +111,20 @@ const BlogPostPage = () => {
 
     // console.log(values);
   }
+
   useEffect(() => {
     if (blogId != "create") {
       getPost();
     } else {
       setCreatingNew(true);
     }
-    if(!token){
-      toast.warning("sign-in first to create!")
-      navigate('/sign-in');
-    }
+   
   }, [blogId, editing , token]);
   return (
     <div className="flex flex-col p-6 px-10 transition-all ">
       <div className="w-full flex-row justify-end flex  ">
         {!editing && !creatingNew && (
-          <Button onClick={() => setEditing(true)}>
+          <Button onClick={handleClick}>
             Edit &nbsp; <Edit2Icon size={12} />
           </Button>
         )}
