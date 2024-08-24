@@ -50,7 +50,7 @@ const LandingPage = () => {
       <div className="w-full flex-row justify-end flex   items-end p-2 px-4">
         <Button onClick={handleClick} className="flex flex-row items-center gap-1 justify-center bg-[#6947bf]   text-base rounded-full font-semibold hover:bg-purple-800 border-2 text-white">Create Post <PlusCircle size={15}/></Button>
       </div>
-      <div className="flex mt-6 flex-col w-full md:px-96 px-5 items-center font-extrabold text-3xl gap-3">
+      <div className="flex mt-6 flex-col w-full md:px-80 px-5 items-center font-extrabold text-3xl gap-3">
         <div className="flex flex-col items-start  ">
           <div className="flex flex-col items-start justify-start ">
             <span className="text-[#7a8196] w-fit py-1 px-3 font-medium text-base border-2 border-[#c1ccd6] rounded-full">
@@ -80,7 +80,7 @@ const LandingPage = () => {
             {blogs &&
               blogs.map((blog) => (
                 <div
-                  className="bg-white shadow-xl  cursor-pointer flex-col flex p-3 gap-2 rounded-xl "
+                  className="bg-white shadow-xl p-5 cursor-pointer flex-col flex gap-2 rounded-xl "
                   key={blog._id}
                   onClick={()=>navigate(`/blogs/${blog._id}`)}
                 >
