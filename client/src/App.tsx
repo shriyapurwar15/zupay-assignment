@@ -11,11 +11,11 @@ import Sidebar from "./components/Sidebar";
 function App() {
   return (
     <>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-screen ">
         <Navbar />
         <div className="flex   flex-row h-full items-center">
           <Sidebar />
-          <div className="bg-[#e5ecf3] rounded-tl-xl  w-full h-full">
+          <div className="bg-[#e5ecf3]  rounded-tl-xl overflow-y-scroll  w-full h-full">
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/sign-in" element={<SignIn />} />

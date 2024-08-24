@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { useAuthTokenStore } from "@/store";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -46,13 +47,14 @@ export default function Signup() {
     },
   });
   
-
+  const setToken = useAuthTokenStore((state)=>state.setToken);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     
     try {
       const {data} = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/user/create`,values)       
       if(data){
         localStorage.setItem("token",data.token);
+        setToken(data.token);
         toast.success("Account created successFully");
         navigate('/')
         }

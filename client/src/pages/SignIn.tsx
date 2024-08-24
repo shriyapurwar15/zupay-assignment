@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import { useAuthTokenStore } from "@/store";
 
 const formSchema = z.object({
   email: z.string().min(2, {
@@ -34,6 +35,7 @@ const formSchema = z.object({
 });
 
 export default function SignIn() {
+  const setToken = useAuthTokenStore((state)=>state.setToken);
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +52,7 @@ export default function SignIn() {
       const {data} = await axios.post(`${import.meta.env.VITE_APP_BACKEND_URL}/user/login`,values)       
       if(data){
         localStorage.setItem("token",data.token);
+        setToken(data.token);
         toast.success("signed in successFully");
         navigate('/')
         }

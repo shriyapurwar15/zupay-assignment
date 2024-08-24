@@ -1,11 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
+import { useAuthTokenStore } from "@/store";
 
 const Navbar = () => {
   // const location = useLocation();
   // const { pathname } = location;
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
+  const token = useAuthTokenStore((state) => state.token);
+  const setToken = useAuthTokenStore((state)=>state.setToken);
   const getToken = () => {
     const token = localStorage.getItem("token");
     if (token) setToken(token);
@@ -13,11 +16,11 @@ const Navbar = () => {
 
   useEffect(() => {
     getToken();
-  }, [localStorage.getItem("token")]);
+  }, [token]);
 
 
   return (
-    <div className="flex flex-row justify-between py-[14px] ">
+    <div className="flex  flex-row justify-between py-[14px] ">
       <img
         src="/zuAiLogo.png"
         className="cursor-pointer"
