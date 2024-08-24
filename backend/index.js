@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 app.use(express.json());
-var allowlist = ['http://localhost:3000', 'http://localhost:5173', 'https://zupay-assignment-1.onrender.com']
+var allowlist = ['http://localhost:3000', 'http://localhost:5173', 'https://zupay-assignment-1.onrender.com', "https://zupay-assignment-1.onrender.com/*"]
 var corsOptionsDelegate = function (req, callback) {
     var corsOptions;
     if (allowlist.indexOf(req.header('Origin')) !== -1) {
