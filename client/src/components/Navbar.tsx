@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuthTokenStore } from "@/store";
 
 const Navbar = () => {

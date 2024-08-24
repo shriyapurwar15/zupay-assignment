@@ -95,7 +95,7 @@ const updatePostById = async(req,res) =>{
         } 
 
         if(user._id.toString() !== post.userId.toString()){
-            console.log("hello")
+
             return res.status(401).send("You are not authorized to update this post");
         }
         const updatedPost = await Post.findByIdAndUpdate(id,{

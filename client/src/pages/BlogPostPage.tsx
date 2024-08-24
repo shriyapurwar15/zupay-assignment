@@ -15,8 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import {  useLocation, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import {  useNavigate, useParams } from "react-router-dom";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { CircleX, Edit2Icon } from "lucide-react";
 import { useAuthTokenStore } from "@/store";
@@ -48,7 +48,6 @@ const BlogPostPage = () => {
       const { data } = await axios.get(
         `${import.meta.env.VITE_APP_BACKEND_URL}/posts/${blogId}`
       );
-      console.log(data);
       form.setValue("title", data.title);
       form.setValue("text", data.text);
       if (!data) {
@@ -99,9 +98,11 @@ const BlogPostPage = () => {
         }
       }
     } catch (error) {
-      // console.log(error);
-      // console.log(error.response.data)
-      toast.error(error?.response?.data?error.response.data:"unable to create that post");
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data);
+      } else {
+        toast.error("Unable to create that post");
+      }
     }
     finally{
       setEditing(false);

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthTokenStore } from "@/store";
 import axios from "axios";
 import { PlusCircle } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -44,7 +44,7 @@ const LandingPage = () => {
   useEffect(() => {
     // checkToken();
     fetchBlogs();
-  }, [localStorage.getItem("token")]);
+  }, []);
   return (
     <div className="flex flex-col justify-center mb-3  bg-[#e5ecf3] items-center ">
       <div className="w-full flex-row justify-end flex   items-end p-2 px-4">

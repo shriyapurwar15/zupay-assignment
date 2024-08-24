@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import {
   Card,
   CardContent,
@@ -60,8 +60,11 @@ export default function Signup() {
         }
       }
      catch (error) {
-      console.log(error?.response?.data)
-      toast.error(error?.response?.data?error.response?.data:"unable to sign-in");
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data);
+      } else {
+        toast.error("Unable to create that post");
+      }
       return;
     }
 
